@@ -1,41 +1,13 @@
-# python3
+from socket import *
 
-import socket
-import sys
-
-HOST = ''   # all available interfaces
-PORT = 8888
-
-# 1. open Socket
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-print('Socket created')
-
-# 2. bind to a address and port
-try:
-    s.bind((HOST, PORT))
-except socket.error as msg:
-    print('Bind Failed. Error code: ' + str(msg[0]) + ' Message: ' + msg[1])
-    sys.exit()
-
-print('Socket bind complete')
-
-# 3. Listen for incoming connections
-s.listen(10)
-print('Socket now listening')
-
-# keep talking with the client
-while 1:
-    # 4. Accept connection
-    conn, addr = s.accept()
-    print ('Connected with ' + addr[0] + ':' + str(addr[1]))
-    
-    # 5. Read/Send
-    data = conn.recv(1024)
-    if not data:
-        break
-    conn.sendall(data)
-    print(data.decode())
-    
-    
-conn.close()
-s.close()
+serverPort = 12000
+serverSocket = socket(AF_INET, SOCK_STREAM)
+serverSocket.bind(('', serverPort))
+serverSocket.listen(1)
+print('The server is ready to receive')
+while True:
+    connectionSocket, addr = serverSocket.accept()
+    sentence = connectionSocket.recv(1024).decode()
+    capitalizedSentence = sentence.upper()
+    connectionSocket.send(capitalizedSentence.encode())
+    connectionSocket.close()
