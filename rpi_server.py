@@ -22,3 +22,20 @@ print('Socket bind complete')
 # 3. Listen for incoming connections
 s.listen(10)
 print('Socket now listening')
+
+# keep talking with the client
+while 1:
+    # 4. Accept connection
+    conn, addr = s.accept()
+    print ('Connected with ' + addr[0] + ':' + str(addr[1]))
+    
+    # 5. Read/Send
+    data = conn.recv(1024)
+    if not data:
+        break
+    conn.sendall(data)
+    print(data.decode())
+    
+    
+conn.close()
+s.close()
